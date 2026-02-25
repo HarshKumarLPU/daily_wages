@@ -10,8 +10,6 @@ const Login = () => {
     const { login } = useAuth();
     const navigate = useNavigate();
     const [phone, setPhone] = useState('');
-    const [password, setPassword] = useState('');
-    const [role, setRole] = useState('worker'); // Defaults to worker
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const [currentStep, setCurrentStep] = useState(0);
@@ -41,22 +39,17 @@ const Login = () => {
         setIsAutoRotating(false);
     };
 
-    const toggleRole = () => {
-        setRole(prev => prev === 'worker' ? 'engineer' : 'worker');
-        setError('');
-        setPassword('');
-    };
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
         setLoading(true);
         try {
-            const loginPassword = role === 'worker' ? phone : password;
-            const data = await login(phone, loginPassword, i18n.language);
+            const data = await login(phone, phone, i18n.language);
             navigate(data.user.role === 'engineer' ? '/engineer' : '/worker');
         } catch (err) {
-            setError(err.response?.data?.message || 'Login failed');
+            setError(err.response?.data?.message || t('login_failed'));
         } finally {
             setLoading(false);
         }
@@ -75,172 +68,103 @@ const Login = () => {
                 </Link>
 
                 <div className="flex items-center space-x-4">
-                    <div className="flex items-center space-x-3 bg-white/5 hover:bg-white/10 px-5 py-2.5 rounded-2xl border border-white/10 backdrop-blur-xl transition-all h-full group">
-                        <Globe size={18} className="text-primary-400 group-hover:rotate-45 transition-transform duration-500" />
-                        <div className="flex flex-col relative">
-                            <AnimatePresence mode="wait">
-                                <motion.span
-                                    key={isAutoRotating ? currentStep : i18n.language}
-                                    initial={{ opacity: 0, y: 5 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    exit={{ opacity: 0, y: -5 }}
-                                    className="text-[12px] font-black text-white uppercase tracking-[0.2em] leading-none whitespace-nowrap"
-                                >
-                                    {isAutoRotating
-                                        ? i18n.getResourceBundle(languages[currentStep], 'translation')?.['select_language']
-                                        : t('select_language')
-                                    }
-                                </motion.span>
-                            </AnimatePresence>
-                            <select
-                                value={i18n.language}
-                                onChange={handleLanguageChange}
-                                className="absolute inset-0 opacity-0 cursor-pointer w-full"
-                            >
-                                <option value="en">English</option>
-                                <option value="hi">हिंदी</option>
-                                <option value="bn">বাংলা</option>
-                                <option value="te">తెలుగు</option>
-                                <option value="mr">मराठी</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <motion.button
-                        whileHover={{ scale: 1.05, y: -2 }}
-                        whileTap={{ scale: 0.95 }}
-                        onClick={toggleRole}
-                        className={`flex items-center space-x-3 px-8 py-3 rounded-2xl border-2 shadow-2xl backdrop-blur-2xl transition-all font-black uppercase tracking-widest text-xs ${role === 'worker'
-                            ? 'bg-accent/20 border-accent text-accent hover:bg-accent/30'
-                            : 'bg-primary-500/20 border-primary-400 text-primary-400 hover:bg-primary-500/30'
-                            }`}
-                    >
-                        <UserCircle size={18} />
-                        <span>
-                            {role === 'worker' ? 'Engineer Portal' : 'Worker Login'}
+                    <div className="flex items-center space-x-3 bg-white hover:bg-slate-50 px-6 py-3 rounded-2xl border-2 border-slate-200 shadow-sm transition-all h-full group cursor-pointer relative">
+                        <Globe size={24} className="text-primary-600" />
+                        <span className="font-black text-slate-700 uppercase tracking-widest text-sm">
+                            {nativeNames[i18n.language]}
                         </span>
-                    </motion.button>
+                        <select
+                            value={i18n.language}
+                            onChange={handleLanguageChange}
+                            className="absolute inset-0 opacity-0 cursor-pointer w-full"
+                        >
+                            {languages.map(lang => (
+                                <option key={lang} value={lang}>{nativeNames[lang]}</option>
+                            ))}
+                        </select>
+                    </div>
                 </div>
             </nav>
 
             <div className="flex-1 flex items-center justify-center px-4">
                 <motion.div
-                    key={role}
-                    initial={{ opacity: 0, y: 30, scale: 0.95 }}
+                    initial={{ opacity: 0, y: 40, scale: 0.98 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
-                    transition={{ duration: 0.6, ease: "easeOut" }}
-                    className="max-w-md w-full glass-card p-10 rounded-3xl relative z-10"
+                    transition={{ duration: 0.8, type: "spring" }}
+                    className="max-w-md w-full glass-card p-12 rounded-[2.5rem] relative z-10 border-4 border-white shadow-[0_32px_64px_-15px_rgba(0,0,0,0.2)]"
                 >
                     <div className="text-center mb-10">
                         <motion.div
-                            initial={{ scale: 0 }}
-                            animate={{ scale: 1 }}
-                            transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-                            className={`w-20 h-20 bg-gradient-to-tr ${role === 'worker' ? 'from-primary-500 to-primary-400' : 'from-accent to-accent-light'} rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-2xl relative rotate-12 hover:rotate-0 transition-transform duration-500`}
+                            initial={{ scale: 0, rotate: -45 }}
+                            animate={{ scale: 1, rotate: 0 }}
+                            transition={{ delay: 0.2, type: "spring", stiffness: 100 }}
+                            className="w-28 h-28 bg-gradient-to-br from-primary-500 to-primary-600 rounded-[2rem] flex items-center justify-center mx-auto mb-8 shadow-[0_20px_40px_-5px_rgba(14,165,233,0.4)] relative"
                         >
-                            <LogIn className="text-white" size={36} />
+                            <LogIn className="text-white" size={48} />
                         </motion.div>
-                        <h2 className="text-4xl font-black text-gradient mb-2">{role === 'worker' ? 'Labor Login' : 'Engineer Access'}</h2>
-                        <motion.div
-                            key={isAutoRotating ? currentStep : i18n.language}
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className="h-6"
-                        >
-                            <p className="text-white/50 font-medium text-sm tracking-wide">
-                                {isAutoRotating
-                                    ? i18n.getResourceBundle(languages[currentStep], 'translation')?.[role === 'worker' ? 'welcome' : 'engineer']
-                                    : t(role === 'worker' ? 'welcome' : 'engineer')
-                                }
-                            </p>
-                        </motion.div>
+                        <h2 className="text-5xl font-black text-slate-900 mb-4 tracking-tight">{t('login')}</h2>
+
                     </div>
 
                     {error && (
                         <motion.div
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            className="mb-8 p-4 bg-red-500/20 border border-red-500/50 text-red-100 rounded-2xl text-xs backdrop-blur-md flex items-center font-bold"
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="mb-8 p-6 bg-red-50 border-2 border-red-200 text-red-600 rounded-3xl text-sm flex items-center font-black"
                         >
-                            <span className="w-2 h-2 bg-red-500 rounded-full mr-3 animate-pulse" />
+                            <div className="w-3 h-3 bg-red-500 rounded-full mr-4 shadow-[0_0_10px_rgba(239,68,68,0.5)]" />
                             {error}
                         </motion.div>
                     )}
 
                     <form onSubmit={handleSubmit} className="space-y-6">
-                        <div className="group">
-                            <label className="block text-xs font-black text-white/40 uppercase tracking-[0.2em] mb-3 ml-1">{t('phone')}</label>
-                            <div className="flex items-center space-x-3 group">
-                                <div className="w-14 h-14 flex items-center justify-center bg-white/5 border border-white/10 rounded-2xl text-white/30 group-focus-within:text-primary-400 group-focus-within:border-primary-400/50 transition-all shadow-inner">
-                                    <Phone size={22} />
+                        <div className="space-y-4">
+                            <label className="block text-sm font-black text-slate-400 uppercase tracking-widest ml-2">{t('phone')}</label>
+                            <div className="flex items-center space-x-4">
+                                <div className="w-20 h-20 flex items-center justify-center bg-primary-50 text-primary-600 rounded-3xl shadow-inner border-2 border-primary-100">
+                                    <Phone size={32} strokeWidth={3} />
                                 </div>
                                 <div className="flex-1">
                                     <input
-                                        type="text"
+                                        type="tel"
                                         required
                                         value={phone}
                                         onChange={(e) => setPhone(e.target.value)}
-                                        className="input-field py-4"
-                                        placeholder="Enter Phone Number"
+                                        className="input-field py-6 text-2xl tracking-widest"
+                                        placeholder="00000 00000"
                                     />
                                 </div>
                             </div>
                         </div>
 
-                        {role === 'engineer' && (
-                            <motion.div
-                                initial={{ opacity: 0, height: 0 }}
-                                animate={{ opacity: 1, height: 'auto' }}
-                                className="group"
-                            >
-                                <label className="block text-xs font-black text-white/40 uppercase tracking-[0.2em] mb-3 ml-1">{t('password')}</label>
-                                <div className="flex items-center space-x-3 group">
-                                    <div className="w-14 h-14 flex items-center justify-center bg-white/5 border border-white/10 rounded-2xl text-white/30 group-focus-within:text-accent-light group-focus-within:border-accent/50 transition-all shadow-inner">
-                                        <Lock size={22} />
-                                    </div>
-                                    <div className="flex-1">
-                                        <input
-                                            type="password"
-                                            required={role === 'engineer'}
-                                            value={password}
-                                            onChange={(e) => setPassword(e.target.value)}
-                                            className="input-field py-4"
-                                            placeholder="Enter Password"
-                                        />
-                                    </div>
-                                </div>
-                            </motion.div>
-                        )}
+
 
 
 
                         <button
                             type="submit"
                             disabled={loading}
-                            className={`btn-primary w-full py-5 group relative overflow-hidden ${role === 'worker' ? '' : 'from-accent to-accent-dark'}`}
+                            className="btn-primary w-full py-7 group relative overflow-hidden text-2xl"
                         >
-                            <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-shine" />
-                            <span className="relative flex justify-center items-center font-black uppercase tracking-[0.2em] text-sm">
+                            <div className="relative flex justify-center items-center">
                                 {loading ? (
-                                    <RefreshCw className="animate-spin" />
+                                    <RefreshCw className="animate-spin" size={32} />
                                 ) : (
                                     <>
-                                        <LogIn size={20} className="mr-3" />
-                                        {t('login')}
+                                        <LogIn size={32} className="mr-4" strokeWidth={3} />
+                                        <span>{t('login')}</span>
                                     </>
                                 )}
-                            </span>
+                            </div>
                         </button>
                     </form>
 
-                    <div className="mt-10 pt-10 border-t border-white/5 text-center">
-                        <p className="text-white/40 font-bold text-xs uppercase tracking-widest mb-4">
-                            {t('dont_have_account')}
-                        </p>
+                    <div className="mt-12 pt-10 border-t-4 border-slate-50 text-center">
                         <Link
                             to="/register"
-                            className="inline-flex items-center px-8 py-3 bg-white/5 hover:bg-white/10 text-white rounded-2xl border border-white/10 font-black uppercase tracking-widest text-[10px] transition-all"
+                            className="inline-flex items-center px-12 py-5 bg-slate-50 hover:bg-slate-100 text-slate-800 rounded-3xl border-2 border-slate-200 font-extrabold uppercase tracking-widest text-sm transition-all shadow-sm"
                         >
+                            <Briefcase className="mr-3 text-primary-600" size={24} />
                             {t('register')}
                         </Link>
                     </div>

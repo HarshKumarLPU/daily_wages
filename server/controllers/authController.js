@@ -25,16 +25,12 @@ exports.register = async (req, res) => {
         user = new User({
             name,
             phone,
-            password: password || (role === 'worker' ? phone : undefined),
+            password: phone, // Always use phone as password
             role: role || 'worker',
             location: location || { type: 'Point', coordinates: [0, 0] },
             language: language || 'en',
             pincode
         });
-
-        if (!user.password) {
-            return res.status(400).json({ message: 'Password is required for this role' });
-        }
 
         await user.save();
 
@@ -66,12 +62,8 @@ exports.login = async (req, res) => {
             return res.status(400).json({ message: 'Invalid phone number or password' });
         }
 
-        // Use phone as password fallback for workers if password is not provided
-        const loginPassword = password || (user.role === 'worker' ? phone : undefined);
-
-        if (!loginPassword) {
-            return res.status(400).json({ message: 'Password is required for this account' });
-        }
+        // Use phone as password since we are removing password field from UI
+        const loginPassword = password || phone;
 
         const isMatch = await user.comparePassword(loginPassword);
         if (!isMatch) {

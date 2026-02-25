@@ -5,11 +5,11 @@
 :root {
   font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
-  font-weight: 400;
+  font-weight: 500;
 
   color-scheme: light;
-  color: #1f2937;
-  background-color: #f0f4f8;
+  color: #0f172a;
+  background-color: #ffffff;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -20,9 +20,9 @@
 body {
   margin: 0;
   min-height: 100vh;
-  background: radial-gradient(at 0% 0%, hsla(253, 16%, 7%, 1) 0, transparent 50%),
-    radial-gradient(at 50% 0%, hsla(225, 39%, 30%, 1) 0, transparent 50%),
-    radial-gradient(at 100% 0%, hsla(339, 49%, 30%, 1) 0, transparent 50%);
+  background: radial-gradient(at 0% 0%, hsla(210, 100%, 96%, 1) 0, transparent 50%),
+    radial-gradient(at 50% 0%, hsla(220, 100%, 94%, 1) 0, transparent 50%),
+    radial-gradient(at 100% 0%, hsla(340, 100%, 96%, 1) 0, transparent 50%);
   background-attachment: fixed;
 }
 
@@ -33,43 +33,43 @@ body {
   width: 100%;
   height: 100%;
   z-index: -1;
-  background-color: #0f172a;
+  background-color: #f8fafc;
   background-image:
-    radial-gradient(at 0% 0%, rgba(30, 64, 175, 0.3) 0px, transparent 50%),
-    radial-gradient(at 50% 0%, rgba(136, 19, 55, 0.3) 0px, transparent 50%),
-    radial-gradient(at 100% 0%, rgba(20, 184, 166, 0.3) 0px, transparent 50%),
-    radial-gradient(at 50% 50%, rgba(88, 28, 135, 0.3) 0px, transparent 50%);
-  filter: blur(100px);
+    radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.15) 0px, transparent 50%),
+    radial-gradient(at 50% 0%, rgba(236, 72, 153, 0.15) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(20, 184, 166, 0.15) 0px, transparent 50%),
+    radial-gradient(at 50% 50%, rgba(139, 92, 246, 0.1) 0px, transparent 50%);
+  filter: blur(80px);
 }
 
 .glass {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(16px) saturate(180%);
   -webkit-backdrop-filter: blur(16px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.5);
 }
 
 .glass-card {
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.1), 0 5px 15px -5px rgba(0, 0, 0, 0.04);
 }
 
 .btn-primary {
-  @apply bg-gradient-to-r from-primary-600 to-[#db2777] shadow-lg text-white font-bold py-3 px-6 rounded-xl transition-all hover:scale-105 active:scale-95 hover:shadow-primary-500/50;
+  @apply bg-gradient-to-r from-primary-600 to-accent shadow-xl text-white font-extrabold py-4 px-8 rounded-2xl transition-all hover:scale-105 active:scale-95 hover:shadow-primary-500/40;
 }
 
 .input-field {
-  @apply w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/40 focus:ring-2 focus:ring-primary-400 focus:bg-white/20 outline-none transition-all;
+  @apply w-full px-5 py-4 bg-white border-2 border-slate-200 rounded-2xl text-slate-900 placeholder-slate-400 focus:ring-4 focus:ring-primary-100 focus:border-primary-500 outline-none transition-all font-bold text-lg shadow-sm;
 }
 
 .text-gradient {
-  @apply bg-clip-text text-transparent bg-gradient-to-br from-white via-primary-300 to-[#f472b6];
+  @apply bg-clip-text text-transparent bg-gradient-to-br from-primary-700 via-primary-600 to-accent;
 }
 
 .neon-border {
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 0 15px rgba(2, 132, 199, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
 }

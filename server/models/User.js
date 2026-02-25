@@ -35,7 +35,7 @@ const userSchema = new mongoose.Schema({
     },
     language: {
         type: String,
-        enum: ['en', 'hi'],
+        enum: ['en', 'hi', 'bn', 'te', 'mr'],
         default: 'en'
     },
     pincode: {
