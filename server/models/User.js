@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -19,7 +19,7 @@ const userSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ['engineer', 'worker', 'admin'],
+        enum: ['contractor', 'worker', 'admin'],
         required: true
     },
     location: {
@@ -35,12 +35,16 @@ const userSchema = new mongoose.Schema({
     },
     language: {
         type: String,
-        enum: ['en', 'hi', 'bn', 'te', 'mr'],
+        enum: ['en', 'hi', 'te', 'mr', 'pa'],
         default: 'en'
     },
     pincode: {
         type: String,
         trim: true
+    },
+    callCount: {
+        type: Number,
+        default: 0
     },
     createdAt: {
         type: Date,

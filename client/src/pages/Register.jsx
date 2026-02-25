@@ -1,51 +1,28 @@
 import React, { useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
-import { UserPlus, Phone, Lock, User, MapPin, Globe, RefreshCw, Briefcase, UserCircle, LogIn } from 'lucide-react';
+import { UserPlus, Phone, User, MapPin, RefreshCw, Briefcase, UserCircle, LogIn, CheckCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
+import LanguageSwitcher from '../components/LanguageSwitcher';
+import usePincode from '../hooks/usePincode';
 
 const Register = () => {
-    const { t, i18n } = useTranslation();
     const { register } = useAuth();
     const navigate = useNavigate();
+    const { t, i18n } = useTranslation();
     const [formData, setFormData] = useState({
         name: '',
         phone: '',
         role: 'worker',
         pincode: ''
     });
+    const { locationData, loading: pincodeLoading, error: pincodeError } = usePincode(formData.pincode);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-    const [currentStep, setCurrentStep] = useState(0);
-    const [isAutoRotating, setIsAutoRotating] = useState(true);
-
-    const languages = ['en', 'hi', 'bn', 'te', 'mr'];
-    const nativeNames = {
-        en: 'English',
-        hi: 'हिंदी',
-        bn: 'বাংলা',
-        te: 'తెలుగు',
-        mr: 'मराठी'
-    };
-
-    React.useEffect(() => {
-        if (!isAutoRotating) return;
-        const timer = setInterval(() => {
-            setCurrentStep((prev) => (prev + 1) % languages.length);
-        }, 3000);
-        return () => clearInterval(timer);
-    }, [isAutoRotating]);
-
-    const handleLanguageChange = (e) => {
-        const newLang = e.target.value;
-        i18n.changeLanguage(newLang);
-        localStorage.setItem('i18nextLng', newLang); // Force immediate persistence
-        setIsAutoRotating(false);
-    };
 
     const toggleRole = () => {
-        const newRole = formData.role === 'worker' ? 'engineer' : 'worker';
+        const newRole = formData.role === 'worker' ? 'contractor' : 'worker';
         setFormData({ ...formData, role: newRole });
         setError('');
     };
@@ -61,7 +38,7 @@ const Register = () => {
 
         try {
             if (formData.pincode.length !== 6) {
-                throw new Error(t('pincode_length_error'));
+                throw new Error('Please enter a valid 6-digit pincode');
             }
 
             try {
@@ -73,11 +50,11 @@ const Register = () => {
                 await finalizeRegistration(coordinates);
             } catch (err) {
                 console.error('Pincode fetch error:', err);
-                setError(t('invalid_pincode_error'));
+                setError('Invalid pincode. Please check and try again.');
                 setLoading(false);
             }
         } catch (err) {
-            setError(err.message || t('registration_failed'));
+            setError(err.message || t('error'));
             setLoading(false);
         }
     };
@@ -89,9 +66,9 @@ const Register = () => {
                 location: { type: 'Point', coordinates: coords },
                 language: i18n.language
             });
-            navigate(data.user.role === 'engineer' ? '/engineer' : '/worker');
+            navigate(data.user.role === 'contractor' ? '/contractor' : '/worker');
         } catch (err) {
-            setError(err.response?.data?.message || t('registration_failed'));
+            setError(err.response?.data?.message || t('error'));
             setLoading(false);
         }
     };
@@ -109,22 +86,7 @@ const Register = () => {
                 </Link>
 
                 <div className="flex items-center space-x-4">
-                    <div className="flex items-center space-x-3 bg-white hover:bg-slate-50 px-6 py-3 rounded-2xl border-2 border-slate-200 shadow-sm transition-all h-full group cursor-pointer relative">
-                        <Globe size={24} className="text-primary-600" />
-                        <span className="font-black text-slate-700 uppercase tracking-widest text-sm">
-                            {nativeNames[i18n.language]}
-                        </span>
-                        <select
-                            value={i18n.language}
-                            onChange={handleLanguageChange}
-                            className="absolute inset-0 opacity-0 cursor-pointer w-full"
-                        >
-                            {languages.map(lang => (
-                                <option key={lang} value={lang}>{nativeNames[lang]}</option>
-                            ))}
-                        </select>
-                    </div>
-
+                    <LanguageSwitcher />
                     <motion.button
                         whileHover={{ scale: 1.05, y: -2 }}
                         whileTap={{ scale: 0.95 }}
@@ -133,7 +95,7 @@ const Register = () => {
                     >
                         <UserCircle size={18} className="text-primary-600" />
                         <span>
-                            {formData.role === 'worker' ? t('engineer_portal') : t('worker_registration')}
+                            {formData.role === 'worker' ? t('contractorPortal') : t('workerRegistration')}
                         </span>
                     </motion.button>
                 </div>
@@ -145,21 +107,20 @@ const Register = () => {
                     initial={{ opacity: 0, y: 40, scale: 0.98 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     transition={{ duration: 0.8, type: "spring" }}
-                    className="max-w-3xl w-full glass-card p-12 rounded-[2.5rem] relative z-10 border-4 border-white shadow-[0_32px_64px_-15px_rgba(0,0,0,0.2)]"
+                    className="max-w-3xl w-full glass-card p-6 sm:p-12 rounded-[2.5rem] relative z-10 border-4 border-white shadow-[0_32px_64px_-15px_rgba(0,0,0,0.2)]"
                 >
                     <div className="text-center mb-10">
                         <motion.div
                             initial={{ scale: 0, rotate: -45 }}
                             animate={{ scale: 1, rotate: 0 }}
                             transition={{ delay: 0.2, type: "spring", stiffness: 100 }}
-                            className={`w-28 h-28 bg-gradient-to-br ${formData.role === 'worker' ? 'from-primary-500 to-primary-600' : 'from-accent to-accent-dark'} rounded-[2.5rem] flex items-center justify-center mx-auto mb-8 shadow-2xl relative`}
+                            className={`w-20 h-20 sm:w-28 sm:h-28 bg-gradient-to-br ${formData.role === 'worker' ? 'from-primary-500 to-primary-600' : 'from-accent to-accent-dark'} rounded-[2.5rem] flex items-center justify-center mx-auto mb-6 sm:mb-8 shadow-2xl relative`}
                         >
-                            <UserPlus className="text-white" size={48} />
+                            <UserPlus className="text-white w-10 h-10 sm:w-12 sm:h-12" />
                         </motion.div>
-                        <h2 className="text-5xl font-black text-slate-900 mb-4 tracking-tight">
-                            {formData.role === 'worker' ? t('join_as_worker') : t('engineer_signup')}
+                        <h2 className="text-3xl sm:text-5xl font-black text-slate-900 mb-4 tracking-tight">
+                            {formData.role === 'worker' ? t('joiningAs') : t('contractorSignup')}
                         </h2>
-
                     </div>
 
                     {error && (
@@ -176,7 +137,7 @@ const Register = () => {
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                             <div className="space-y-4 col-span-1 md:col-span-2">
-                                <label className="block text-sm font-black text-slate-400 uppercase tracking-widest ml-2">{t('name')}</label>
+                                <label className="block text-sm font-black text-slate-400 uppercase tracking-widest ml-2">{t('fullName')}</label>
                                 <div className="flex items-center space-x-4">
                                     <div className="w-16 h-16 flex-shrink-0 flex items-center justify-center bg-slate-100 text-slate-500 rounded-2xl shadow-inner border-2 border-slate-200">
                                         <User size={28} strokeWidth={3} />
@@ -187,13 +148,13 @@ const Register = () => {
                                         value={formData.name}
                                         onChange={handleChange}
                                         className="input-field py-6 text-2xl"
-                                        placeholder={t('full_name_placeholder')}
+                                        placeholder={t('fullName')}
                                     />
                                 </div>
                             </div>
 
                             <div className="space-y-4">
-                                <label className="block text-sm font-black text-slate-400 uppercase tracking-widest ml-2">{t('phone')}</label>
+                                <label className="block text-sm font-black text-slate-400 uppercase tracking-widest ml-2">{t('phoneNumber')}</label>
                                 <div className="flex items-center space-x-4">
                                     <div className="w-16 h-16 flex-shrink-0 flex items-center justify-center bg-primary-50 text-primary-600 rounded-2xl shadow-inner border-2 border-primary-100">
                                         <Phone size={28} strokeWidth={3} />
@@ -228,12 +189,39 @@ const Register = () => {
                                             className="input-field py-5 text-xl tracking-[0.2em]"
                                             placeholder="000000"
                                         />
+                                        <AnimatePresence>
+                                            {(pincodeLoading || locationData || pincodeError) && (
+                                                <motion.div
+                                                    initial={{ opacity: 0, height: 0 }}
+                                                    animate={{ opacity: 1, height: 'auto' }}
+                                                    exit={{ opacity: 0, height: 0 }}
+                                                    className="mt-3 ml-2"
+                                                >
+                                                    {pincodeLoading && (
+                                                        <div className="flex items-center text-xs font-bold text-slate-400">
+                                                            <RefreshCw className="animate-spin mr-2" size={12} />
+                                                            {t('fetchingLocation')}
+                                                        </div>
+                                                    )}
+                                                    {locationData && (
+                                                        <div className="flex items-center text-sm font-black text-emerald-500">
+                                                            <CheckCircle className="mr-2" size={16} />
+                                                            {locationData.placeName}, {locationData.state}
+                                                        </div>
+                                                    )}
+                                                    {pincodeError && (
+                                                        <div className="flex items-center text-xs font-bold text-red-400">
+                                                            <div className="w-1.5 h-1.5 bg-red-400 rounded-full mr-2" />
+                                                            {t('invalidPincode')}
+                                                        </div>
+                                                    )}
+                                                </motion.div>
+                                            )}
+                                        </AnimatePresence>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-
 
                         <button
                             type="submit"
@@ -259,7 +247,7 @@ const Register = () => {
                             className="inline-flex items-center px-12 py-5 bg-slate-50 hover:bg-slate-100 text-slate-800 rounded-3xl border-2 border-slate-200 font-extrabold uppercase tracking-widest text-sm transition-all shadow-sm"
                         >
                             <LogIn className="mr-3 text-primary-600" size={24} />
-                            {t('already_have_account')}
+                            {t('alreadyHaveAccount')}
                         </Link>
                     </div>
                 </motion.div>

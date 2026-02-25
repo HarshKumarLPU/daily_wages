@@ -2,29 +2,26 @@
 
 # Configuration
 BASE_URL="http://localhost:5001/api"
-ENGR_PHONE="9000000002"
+CNTR_PHONE="9000000002"
 WORKR_PHONE="8000000002"
-PASSWORD="password123"
 
-echo "=== 1. Registering Engineer ==="
+echo "=== 1. Registering Contractor ==="
 curl -s -X POST "$BASE_URL/auth/register" \
 -H "Content-Type: application/json" \
 -d "{
-  \"name\": \"Engr Test\",
-  \"phone\": \"$ENGR_PHONE\",
-  \"password\": \"$PASSWORD\",
-  \"role\": \"engineer\",
+  \"name\": \"Cntr Test\",
+  \"phone\": \"$CNTR_PHONE\",
+  \"role\": \"contractor\",
   \"pincode\": \"110001\"
 }" | jq .
 
-echo -e "\n=== 2. Logging in Engineer ==="
-ENGR_LOGIN=$(curl -s -X POST "$BASE_URL/auth/login" \
+echo -e "\n=== 2. Logging in Contractor ==="
+CNTR_LOGIN=$(curl -s -X POST "$BASE_URL/auth/login" \
 -H "Content-Type: application/json" \
 -d "{
-  \"phone\": \"$ENGR_PHONE\",
-  \"password\": \"$PASSWORD\"
+  \"phone\": \"$CNTR_PHONE\"
 }")
-TOKEN=$(echo $ENGR_LOGIN | jq -r .token)
+TOKEN=$(echo $CNTR_LOGIN | jq -r .token)
 echo "Token: $TOKEN"
 
 echo -e "\n=== 3. Posting a Job ==="
@@ -45,7 +42,6 @@ curl -s -X POST "$BASE_URL/auth/register" \
 -d "{
   \"name\": \"Worker Test\",
   \"phone\": \"$WORKR_PHONE\",
-  \"password\": \"$PASSWORD\",
   \"role\": \"worker\",
   \"pincode\": \"110001\"
 }" | jq .
@@ -54,8 +50,7 @@ echo -e "\n=== 5. Logging in Worker ==="
 WORKR_LOGIN=$(curl -s -X POST "$BASE_URL/auth/login" \
 -H "Content-Type: application/json" \
 -d "{
-  \"phone\": \"$WORKR_PHONE\",
-  \"password\": \"$PASSWORD\"
+  \"phone\": \"$WORKR_PHONE\"
 }")
 WTOKEN=$(echo $WORKR_LOGIN | jq -r .token)
 echo "Worker Token: $WTOKEN"

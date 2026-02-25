@@ -1,55 +1,28 @@
 import React, { useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
-import { LogIn, Globe, Phone, Lock, RefreshCw, Briefcase, UserCircle } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { LogIn, Phone, RefreshCw, Briefcase } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
+import LanguageSwitcher from '../components/LanguageSwitcher';
 
 const Login = () => {
-    const { t, i18n } = useTranslation();
     const { login } = useAuth();
     const navigate = useNavigate();
+    const { t, i18n } = useTranslation();
     const [phone, setPhone] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-    const [currentStep, setCurrentStep] = useState(0);
-    const [isAutoRotating, setIsAutoRotating] = useState(true);
-
-    const languages = ['en', 'hi', 'bn', 'te', 'mr'];
-    const nativeNames = {
-        en: 'English',
-        hi: 'हिंदी',
-        bn: 'বাংলা',
-        te: 'తెలుగు',
-        mr: 'मराठी'
-    };
-
-    React.useEffect(() => {
-        if (!isAutoRotating) return;
-        const timer = setInterval(() => {
-            setCurrentStep((prev) => (prev + 1) % languages.length);
-        }, 3000);
-        return () => clearInterval(timer);
-    }, [isAutoRotating]);
-
-    const handleLanguageChange = (e) => {
-        const newLang = e.target.value;
-        i18n.changeLanguage(newLang);
-        localStorage.setItem('i18nextLng', newLang); // Force immediate persistence
-        setIsAutoRotating(false);
-    };
-
-
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
         setLoading(true);
         try {
-            const data = await login(phone, phone, i18n.language);
-            navigate(data.user.role === 'engineer' ? '/engineer' : '/worker');
+            await login(phone, phone, i18n.language);
+            navigate('/worker'); // Default to worker, AuthContext/App will redirect if contractor
         } catch (err) {
-            setError(err.response?.data?.message || t('login_failed'));
+            setError(err.response?.data?.message || t('error'));
         } finally {
             setLoading(false);
         }
@@ -66,24 +39,7 @@ const Login = () => {
                     <Briefcase className="mr-2 text-primary-400" size={28} />
                     DailyWages
                 </Link>
-
-                <div className="flex items-center space-x-4">
-                    <div className="flex items-center space-x-3 bg-white hover:bg-slate-50 px-6 py-3 rounded-2xl border-2 border-slate-200 shadow-sm transition-all h-full group cursor-pointer relative">
-                        <Globe size={24} className="text-primary-600" />
-                        <span className="font-black text-slate-700 uppercase tracking-widest text-sm">
-                            {nativeNames[i18n.language]}
-                        </span>
-                        <select
-                            value={i18n.language}
-                            onChange={handleLanguageChange}
-                            className="absolute inset-0 opacity-0 cursor-pointer w-full"
-                        >
-                            {languages.map(lang => (
-                                <option key={lang} value={lang}>{nativeNames[lang]}</option>
-                            ))}
-                        </select>
-                    </div>
-                </div>
+                <LanguageSwitcher />
             </nav>
 
             <div className="flex-1 flex items-center justify-center px-4">
@@ -91,19 +47,18 @@ const Login = () => {
                     initial={{ opacity: 0, y: 40, scale: 0.98 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     transition={{ duration: 0.8, type: "spring" }}
-                    className="max-w-xl w-full glass-card p-12 rounded-[2.5rem] relative z-10 border-4 border-white shadow-[0_32px_64px_-15px_rgba(0,0,0,0.2)]"
+                    className="max-w-xl w-full glass-card p-6 sm:p-12 rounded-[2.5rem] relative z-10 border-4 border-white shadow-[0_32px_64px_-15px_rgba(0,0,0,0.2)]"
                 >
                     <div className="text-center mb-10">
                         <motion.div
                             initial={{ scale: 0, rotate: -45 }}
                             animate={{ scale: 1, rotate: 0 }}
                             transition={{ delay: 0.2, type: "spring", stiffness: 100 }}
-                            className="w-24 h-24 bg-gradient-to-br from-primary-500 to-primary-600 rounded-[2rem] flex items-center justify-center mx-auto mb-8 shadow-[0_20px_40px_-5px_rgba(14,165,233,0.4)] relative"
+                            className="w-16 h-16 sm:w-24 sm:h-24 bg-gradient-to-br from-primary-500 to-primary-600 rounded-[2rem] flex items-center justify-center mx-auto mb-6 sm:mb-8 shadow-[0_20px_40px_-5px_rgba(14,165,233,0.4)] relative"
                         >
-                            <LogIn className="text-white" size={40} />
+                            <LogIn className="text-white" size={32} />
                         </motion.div>
-                        <h2 className="text-5xl font-black text-slate-900 mb-4 tracking-tight">{t('login')}</h2>
-
+                        <h2 className="text-3xl sm:text-5xl font-black text-slate-900 mb-4 tracking-tight">{t('welcome')}</h2>
                     </div>
 
                     {error && (
@@ -119,10 +74,10 @@ const Login = () => {
 
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div className="space-y-4">
-                            <label className="block text-sm font-black text-slate-400 uppercase tracking-widest ml-2">{t('phone')}</label>
-                            <div className="flex items-center space-x-6">
-                                <div className="w-16 h-16 flex-shrink-0 flex items-center justify-center bg-primary-50 text-primary-600 rounded-3xl shadow-inner border-2 border-primary-100">
-                                    <Phone size={28} strokeWidth={3} />
+                            <label className="block text-sm font-black text-slate-400 uppercase tracking-widest ml-2">{t('phoneNumber')}</label>
+                            <div className="flex items-center space-x-3 md:space-x-6">
+                                <div className="w-12 h-12 md:w-16 md:h-16 flex-shrink-0 flex items-center justify-center bg-primary-50 text-primary-600 rounded-2xl md:rounded-3xl shadow-inner border-2 border-primary-100">
+                                    <Phone className="w-6 h-6 md:w-8 md:h-8" strokeWidth={3} />
                                 </div>
                                 <div className="flex-1">
                                     <input
@@ -130,28 +85,24 @@ const Login = () => {
                                         required
                                         value={phone}
                                         onChange={(e) => setPhone(e.target.value)}
-                                        className="input-field py-6 text-2xl tracking-widest"
+                                        className="input-field py-4 md:py-6 text-xl md:text-2xl tracking-widest"
                                         placeholder="00000 00000"
                                     />
                                 </div>
                             </div>
                         </div>
 
-
-
-
-
                         <button
                             type="submit"
                             disabled={loading}
-                            className="btn-primary w-full py-7 group relative overflow-hidden text-2xl"
+                            className="btn-primary w-full py-5 md:py-7 group relative overflow-hidden text-xl md:text-2xl"
                         >
                             <div className="relative flex justify-center items-center">
                                 {loading ? (
-                                    <RefreshCw className="animate-spin" size={32} />
+                                    <RefreshCw className="animate-spin" size={28} />
                                 ) : (
                                     <>
-                                        <LogIn size={32} className="mr-4" strokeWidth={3} />
+                                        <LogIn className="w-6 h-6 md:w-8 md:h-8 mr-4" strokeWidth={3} />
                                         <span>{t('login')}</span>
                                     </>
                                 )}

@@ -13,10 +13,21 @@ connectDB();
 app.use(cors());
 app.use(express.json());
 
+// Request Logger
+app.use((req, res, next) => {
+    console.error(`[REQUEST] ${new Date().toISOString()} - ${req.method} ${req.url}`);
+    const oldSend = res.send;
+    res.send = function (data) {
+        console.error(`[RESPONSE] ${new Date().toISOString()} - Status: ${res.statusCode}`);
+        return oldSend.apply(res, arguments);
+    };
+    next();
+});
+
 // Routes
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/workers', require('./routes/workerRoutes'));
-app.use('/api/engineers', require('./routes/engineerRoutes'));
+app.use('/api/contractors', require('./routes/contractorRoutes'));
 app.use('/api/jobs', require('./routes/jobRoutes'));
 
 // Basic Route

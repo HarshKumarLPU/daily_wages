@@ -1,15 +1,30 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+
 :root {
-  font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  --primary: #5A4FCF;
+  --primary-light: #7E74D5;
+  --primary-dark: #3F379B;
+  --accent: #FF7E5F;
+  --bg-main: #F0F2F5;
+  --bg-sidebar: #5A4FCF;
+  --bg-card: #FFFFFF;
+  --text-main: #333333;
+  --text-muted: #888888;
+  --text-on-primary: #FFFFFF;
+  --sidebar-width: 260px;
+
+  font-family: 'Outfit', sans-serif;
   line-height: 1.5;
   font-weight: 500;
 
   color-scheme: light;
-  color: #0f172a;
-  background-color: #ffffff;
+  color: var(--text-main);
+  background-color: var(--bg-main);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -20,56 +35,54 @@
 body {
   margin: 0;
   min-height: 100vh;
-  background: radial-gradient(at 0% 0%, hsla(210, 100%, 96%, 1) 0, transparent 50%),
-    radial-gradient(at 50% 0%, hsla(220, 100%, 94%, 1) 0, transparent 50%),
-    radial-gradient(at 100% 0%, hsla(340, 100%, 96%, 1) 0, transparent 50%);
-  background-attachment: fixed;
+  background-color: var(--bg-main);
 }
 
-.mesh-bg {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
-  background-color: #f8fafc;
-  background-image:
-    radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.15) 0px, transparent 50%),
-    radial-gradient(at 50% 0%, rgba(236, 72, 153, 0.15) 0px, transparent 50%),
-    radial-gradient(at 100% 0%, rgba(20, 184, 166, 0.15) 0px, transparent 50%),
-    radial-gradient(at 50% 50%, rgba(139, 92, 246, 0.1) 0px, transparent 50%);
-  filter: blur(80px);
+.onshop-shadow {
+  box-shadow: 0 10px 30px rgba(90, 79, 207, 0.08);
 }
 
-.glass {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(16px) saturate(180%);
-  -webkit-backdrop-filter: blur(16px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.5);
+.onshop-card {
+  @apply bg-white rounded-[2rem] p-6 onshop-shadow border border-white transition-all duration-300;
 }
 
-.glass-card {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(25px);
-  -webkit-backdrop-filter: blur(25px);
-  border: 2px solid rgba(255, 255, 255, 0.8);
-  box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.1), 0 5px 15px -5px rgba(0, 0, 0, 0.04);
+.onshop-card:hover {
+  @apply shadow-2xl scale-[1.01];
 }
 
-.btn-primary {
-  @apply bg-gradient-to-r from-primary-600 to-accent shadow-xl text-white font-extrabold py-4 px-8 rounded-2xl transition-all hover:scale-105 active:scale-95 hover:shadow-primary-500/40;
+.btn-onshop {
+  @apply bg-[var(--primary)] text-white font-bold py-3 px-8 rounded-2xl transition-all hover:opacity-90 active:scale-95 flex items-center justify-center gap-2;
 }
 
-.input-field {
-  @apply w-full px-5 py-4 bg-white border-2 border-slate-200 rounded-2xl text-slate-900 placeholder-slate-400 focus:ring-4 focus:ring-primary-100 focus:border-primary-500 outline-none transition-all font-bold text-lg shadow-sm;
+.btn-onshop-outline {
+  @apply border-2 border-[var(--primary)] text-[var(--primary)] font-bold py-3 px-8 rounded-2xl transition-all hover:bg-[var(--primary)] hover:text-white active:scale-95 flex items-center justify-center gap-2;
 }
 
-.text-gradient {
-  @apply bg-clip-text text-transparent bg-gradient-to-br from-primary-700 via-primary-600 to-accent;
+.input-onshop {
+  @apply w-full px-5 py-3 bg-[#F8F9FA] border-none rounded-xl text-slate-900 placeholder-slate-400 focus:ring-2 focus:ring-[var(--primary)] outline-none transition-all;
 }
 
-.neon-border {
-  border: 2px solid rgba(255, 255, 255, 0.8);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+.glass-nav {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #D1D5DB;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #9CA3AF;
 }

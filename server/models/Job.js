@@ -11,6 +11,24 @@ const jobSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
+    translations: {
+        hi: {
+            title: String,
+            description: String
+        },
+        te: {
+            title: String,
+            description: String
+        },
+        mr: {
+            title: String,
+            description: String
+        },
+        pa: {
+            title: String,
+            description: String
+        }
+    },
     pincode: {
         type: String,
         required: true,
@@ -27,14 +45,10 @@ const jobSchema = new mongoose.Schema({
             required: true
         }
     },
-    engineer: {
+    contractor: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true
-    },
-    salary: {
-        type: String,
-        trim: true
     },
     createdAt: {
         type: Date,

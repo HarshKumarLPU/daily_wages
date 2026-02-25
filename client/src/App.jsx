@@ -7,10 +7,10 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import WorkerDashboard from './pages/WorkerDashboard';
-import EngineerDashboard from './pages/EngineerDashboard';
+import ContractorDashboard from './pages/ContractorDashboard';
 
-// i18n
-import './i18n';
+// Styles
+import './index.css';
 
 const AppRoutes = () => {
     const { user, loading } = useAuth();
@@ -19,7 +19,8 @@ const AppRoutes = () => {
 
     return (
         <Routes>
-            <Route path="/login" element={!user ? <Login /> : <Navigate to={user.role === 'engineer' ? '/engineer' : '/worker'} />} />
+            <Route path="/" element={!user ? <Login /> : <Navigate to={user.role === 'contractor' ? '/contractor' : '/worker'} />} />
+            <Route path="/login" element={<Navigate to="/" />} />
             <Route path="/register" element={!user ? <Register /> : <Navigate to="/worker" />} />
 
             <Route path="/worker" element={
@@ -28,13 +29,11 @@ const AppRoutes = () => {
                 </ProtectedRoute>
             } />
 
-            <Route path="/engineer" element={
-                <ProtectedRoute allowedRoles={['engineer']}>
-                    <EngineerDashboard />
+            <Route path="/contractor" element={
+                <ProtectedRoute allowedRoles={['contractor']}>
+                    <ContractorDashboard />
                 </ProtectedRoute>
             } />
-
-            <Route path="/" element={<Navigate to="/login" />} />
         </Routes>
     );
 };
@@ -42,7 +41,6 @@ const AppRoutes = () => {
 function App() {
     return (
         <AuthProvider>
-            <div className="mesh-bg" />
             <Router>
                 <AppRoutes />
             </Router>

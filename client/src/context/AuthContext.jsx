@@ -15,11 +15,6 @@ export const AuthProvider = ({ children }) => {
                 try {
                     const res = await api.get('/auth/me');
                     setUser(res.data);
-
-                    // Apply saved language preference
-                    if (res.data.language) {
-                        i18n.changeLanguage(res.data.language);
-                    }
                 } catch (err) {
                     console.error('Auth verification failed', err);
                     localStorage.removeItem('token');
@@ -31,13 +26,17 @@ export const AuthProvider = ({ children }) => {
         checkUser();
     }, []);
 
+    // Re-implemented: Sync language whenever user data loads or changes
+    useEffect(() => {
+        if (user?.language) {
+            i18n.changeLanguage(user.language);
+        }
+    }, [user]);
+
     const login = async (phone, password, language) => {
         const res = await api.post('/auth/login', { phone, password, language });
         localStorage.setItem('token', res.data.token);
         setUser(res.data.user);
-        if (res.data.user.language) {
-            i18n.changeLanguage(res.data.user.language);
-        }
         return res.data;
     };
 
@@ -45,9 +44,6 @@ export const AuthProvider = ({ children }) => {
         const res = await api.post('/auth/register', userData);
         localStorage.setItem('token', res.data.token);
         setUser(res.data.user);
-        if (res.data.user.language) {
-            i18n.changeLanguage(res.data.user.language);
-        }
         return res.data;
     };
 
