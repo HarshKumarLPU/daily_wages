@@ -145,7 +145,7 @@ const Register = () => {
                     initial={{ opacity: 0, y: 40, scale: 0.98 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     transition={{ duration: 0.8, type: "spring" }}
-                    className="max-w-xl w-full glass-card p-12 rounded-[2.5rem] relative z-10 border-4 border-white shadow-[0_32px_64px_-15px_rgba(0,0,0,0.2)]"
+                    className="max-w-3xl w-full glass-card p-12 rounded-[2.5rem] relative z-10 border-4 border-white shadow-[0_32px_64px_-15px_rgba(0,0,0,0.2)]"
                 >
                     <div className="text-center mb-10">
                         <motion.div
@@ -178,8 +178,8 @@ const Register = () => {
                             <div className="space-y-4 col-span-1 md:col-span-2">
                                 <label className="block text-sm font-black text-slate-400 uppercase tracking-widest ml-2">{t('name')}</label>
                                 <div className="flex items-center space-x-4">
-                                    <div className="w-20 h-20 flex items-center justify-center bg-slate-100 text-slate-500 rounded-3xl shadow-inner border-2 border-slate-200">
-                                        <User size={32} strokeWidth={3} />
+                                    <div className="w-16 h-16 flex-shrink-0 flex items-center justify-center bg-slate-100 text-slate-500 rounded-2xl shadow-inner border-2 border-slate-200">
+                                        <User size={28} strokeWidth={3} />
                                     </div>
                                     <input
                                         name="name"
@@ -195,36 +195,40 @@ const Register = () => {
                             <div className="space-y-4">
                                 <label className="block text-sm font-black text-slate-400 uppercase tracking-widest ml-2">{t('phone')}</label>
                                 <div className="flex items-center space-x-4">
-                                    <div className="w-20 h-20 flex items-center justify-center bg-primary-50 text-primary-600 rounded-3xl shadow-inner border-2 border-primary-100">
-                                        <Phone size={32} strokeWidth={3} />
+                                    <div className="w-16 h-16 flex-shrink-0 flex items-center justify-center bg-primary-50 text-primary-600 rounded-2xl shadow-inner border-2 border-primary-100">
+                                        <Phone size={28} strokeWidth={3} />
                                     </div>
-                                    <input
-                                        name="phone"
-                                        type="tel"
-                                        required
-                                        value={formData.phone}
-                                        onChange={handleChange}
-                                        className="input-field py-6 text-2xl tracking-widest"
-                                        placeholder="00000 00000"
-                                    />
+                                    <div className="flex-1 min-w-0">
+                                        <input
+                                            name="phone"
+                                            type="tel"
+                                            required
+                                            value={formData.phone}
+                                            onChange={handleChange}
+                                            className="input-field py-5 text-xl tracking-widest"
+                                            placeholder="00000 00000"
+                                        />
+                                    </div>
                                 </div>
                             </div>
 
                             <div className="space-y-4">
                                 <label className="block text-sm font-black text-slate-400 uppercase tracking-widest ml-2">{t('pincode')}</label>
                                 <div className="flex items-center space-x-4">
-                                    <div className="w-20 h-20 flex items-center justify-center bg-accent/5 text-accent rounded-3xl shadow-inner border-2 border-accent/20">
-                                        <MapPin size={32} strokeWidth={3} />
+                                    <div className="w-16 h-16 flex-shrink-0 flex items-center justify-center bg-accent/5 text-accent rounded-2xl shadow-inner border-2 border-accent/20">
+                                        <MapPin size={28} strokeWidth={3} />
                                     </div>
-                                    <input
-                                        name="pincode"
-                                        required
-                                        maxLength="6"
-                                        value={formData.pincode}
-                                        onChange={handleChange}
-                                        className="input-field py-6 text-2xl tracking-[0.3em]"
-                                        placeholder="000000"
-                                    />
+                                    <div className="flex-1 min-w-0">
+                                        <input
+                                            name="pincode"
+                                            required
+                                            maxLength="6"
+                                            value={formData.pincode}
+                                            onChange={handleChange}
+                                            className="input-field py-5 text-xl tracking-[0.2em]"
+                                            placeholder="000000"
+                                        />
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -91,16 +91,16 @@ const Login = () => {
                     initial={{ opacity: 0, y: 40, scale: 0.98 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     transition={{ duration: 0.8, type: "spring" }}
-                    className="max-w-md w-full glass-card p-12 rounded-[2.5rem] relative z-10 border-4 border-white shadow-[0_32px_64px_-15px_rgba(0,0,0,0.2)]"
+                    className="max-w-xl w-full glass-card p-12 rounded-[2.5rem] relative z-10 border-4 border-white shadow-[0_32px_64px_-15px_rgba(0,0,0,0.2)]"
                 >
                     <div className="text-center mb-10">
                         <motion.div
                             initial={{ scale: 0, rotate: -45 }}
                             animate={{ scale: 1, rotate: 0 }}
                             transition={{ delay: 0.2, type: "spring", stiffness: 100 }}
-                            className="w-28 h-28 bg-gradient-to-br from-primary-500 to-primary-600 rounded-[2rem] flex items-center justify-center mx-auto mb-8 shadow-[0_20px_40px_-5px_rgba(14,165,233,0.4)] relative"
+                            className="w-24 h-24 bg-gradient-to-br from-primary-500 to-primary-600 rounded-[2rem] flex items-center justify-center mx-auto mb-8 shadow-[0_20px_40px_-5px_rgba(14,165,233,0.4)] relative"
                         >
-                            <LogIn className="text-white" size={48} />
+                            <LogIn className="text-white" size={40} />
                         </motion.div>
                         <h2 className="text-5xl font-black text-slate-900 mb-4 tracking-tight">{t('login')}</h2>
 
@@ -120,9 +120,9 @@ const Login = () => {
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div className="space-y-4">
                             <label className="block text-sm font-black text-slate-400 uppercase tracking-widest ml-2">{t('phone')}</label>
-                            <div className="flex items-center space-x-4">
-                                <div className="w-20 h-20 flex items-center justify-center bg-primary-50 text-primary-600 rounded-3xl shadow-inner border-2 border-primary-100">
-                                    <Phone size={32} strokeWidth={3} />
+                            <div className="flex items-center space-x-6">
+                                <div className="w-16 h-16 flex-shrink-0 flex items-center justify-center bg-primary-50 text-primary-600 rounded-3xl shadow-inner border-2 border-primary-100">
+                                    <Phone size={28} strokeWidth={3} />
                                 </div>
                                 <div className="flex-1">
                                     <input
